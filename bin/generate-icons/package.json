@@ -1,0 +1,17 @@
+{
+  "name": "bin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "generate-icons.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^3.5.1",
+    "gm": "^1.23.0",
+    "node-base64-image": "^1.0.4",
+    "rimraf": "^2.6.2"
+  }
+}
