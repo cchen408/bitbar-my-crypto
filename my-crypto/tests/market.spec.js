@@ -17,7 +17,7 @@ describe('getGdaxData', function () {
 describe('getBinanceData', function () {
 
     it('update icx with price', async function () {
-        await market.getBinanceData();
+        await market.getBinanceData(['icon']);
         expect(market.data.icon.price_usd).to.exist;
     });
 

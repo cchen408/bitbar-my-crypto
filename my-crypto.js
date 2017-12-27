@@ -9,11 +9,19 @@ const font = 'Monaco';
 var totalValue = 0;
 var valueWithCost = 0;
 var totalCost = 0;
+var currencies = ['ethereum', 'bitcoin', 'litecoin', 'bitcoin-cash', 'icon'];
 
 async function myCrypto() {
 
+    _.each(holdings, function(holding){
+        if(!_.includes(currencies, holding.name)){
+            currencies.push(holding.name);
+        }
+    });
+
     // get market data
-    await market.getAllData();
+    await market.getAllData(currencies);
+
     let cmcData = market.data;
 
     // holdings
@@ -75,5 +83,11 @@ async function myCrypto() {
     console.log(`total: $${_.round(totalValue, 2)}\t\t% profit/loss: ${_.round(valueWithCost / totalCost * 100 - 100, 2)}% | color='#000' font=${font}`);
 }
 
-myCrypto();
+try {
+    myCrypto();
+}
+catch (error) {
+    console.error("error:", error);
+    throw error;
+}
 

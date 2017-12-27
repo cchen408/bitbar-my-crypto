@@ -16,7 +16,7 @@ async function generateIcons() {
     // get data from cmc
     var cmcData = await request({
         method: 'GET',
-        url: 'https://api.coinmarketcap.com/v1/ticker/?limit=50',
+        url: 'https://api.coinmarketcap.com/v1/ticker/?limit=150',
         json: true
     });
 

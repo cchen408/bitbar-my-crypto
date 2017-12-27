@@ -4,56 +4,55 @@ var cmc = require('./cmc');
 var gdax = require('./gdax');
 var binance = require('./binance');
 
-var icon = {
-    "id": "icon",
-    "name": "Icon",
-    "symbol": "ICX",
-};
-
 module.exports = {
 
-    data: {
-        icon
-    },
+    data: {},
 
     /**
      * get data from everywhere
+     * @param currencies
      * @returns {Promise.<void>}
      */
-    getAllData: async function () {
-        await this.getCmcData();
-        await this.getGdaxData();
-        await this.getBinanceData();
+    getAllData: async function (currencies) {
+        await this.getCmcData(currencies);
+        await this.getGdaxData(currencies);
+        await this.getBinanceData(currencies);
     },
 
     /**
      * get data from coinmarketcap
+     * @param currencies
      */
-    getCmcData: async function () {
+    getCmcData: async function (currencies) {
         var self = this;
-        var cmcData = await cmc.getTicker(50);
-        this.data.cmc = cmcData;
 
-        // sort data into object
-        _.each(cmcData, function (cmcDatum) {
-            self.data[cmcDatum.id] = cmcDatum;
-        });
+        var promises = [];
+        _.each(currencies, function(currency){
+            var promise = async function(){
+                var data = await cmc.getCoin(currency);
+                self.data[data.id] = data;
+            }
+            promises.push(promise());
+        })
+        await Promise.all(promises);
     },
 
     /**
      * get data from binance
      */
-    getBinanceData: async function () {
-
+    getBinanceData: async function (currencies) {
         // get ICX price
-        this.data['icon'].price_usd = await binance.getPriceUsd('icx');
-
+        if(_.includes(currencies, 'icon')){
+            var iconPrice = await binance.getPriceUsd('icx');
+            _.set(this.data, `icon.price_usd`, iconPrice);
+        }
     },
 
     /**
      * get data from gdax
      */
     getGdaxData: async function () {
+        var self = this;
         var map = {
             bitcoin: 'btc',
             ethereum: 'eth',
@@ -62,7 +61,6 @@ module.exports = {
         };
 
         var promises = [];
-        var self = this;
         _.forIn(map, function (symbol, name) {
             var promise = async function () {
                 var price = await gdax.getPrice(symbol);
