@@ -9,15 +9,12 @@ const font = 'Monaco';
 var totalValue = 0;
 var valueWithCost = 0;
 var totalCost = 0;
-var currencies = ['ethereum', 'bitcoin', 'litecoin', 'bitcoin-cash', 'icon'];
+var currencies = ['ethereum', 'bitcoin', 'litecoin', 'bitcoin-cash'];
 
 async function myCrypto() {
 
-    _.each(holdings, function(holding){
-        if(!_.includes(currencies, holding.name)){
-            currencies.push(holding.name);
-        }
-    });
+    var holdingNames = _.map(holdings, 'name');
+    currencies = _.union(holdingNames, currencies);
 
     // get market data
     await market.getAllData(currencies);
