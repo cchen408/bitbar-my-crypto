@@ -56,14 +56,18 @@ async function myCrypto() {
     _.each(holdings, function (data, index) {
         data.percentage = data.value / totalValue * 100;
         holdings[index] = data;
+        if(data.cost && data.cost > 0){
+            data.profit = _.round((data.value / data.cost-1) * 100, 2);
+        }
+        data.profit = data.profit || 'NA';
     });
 
-    console.log(`| image=${icons.btc}`);
+    console.log(`| image=${icons.usd}`);
     console.log('---');
     console.log(`${'sym'.padEnd(8)}\t${'price'.padEnd(8)}\t${'value'.padEnd(8)}\t${'cost'.padEnd(4)}\t% | color='#000' font=${font}`);
     console.log('---');
     _.each(holdings, function (data) {
-        var image = _.get(icons, _.toLower(data.symbol));
+        var image = _.get(icons, _.toLower(data.symbol), icons.usd);
         data.cost = data.cost || 0;
         data.cost = _.round(data.cost, 2).toString().padEnd(4)
         data.symbol = data.symbol || '';
@@ -74,7 +78,7 @@ async function myCrypto() {
         data.value = data.value.toString().padEnd(8);
         data.percentage = _.round(data.percentage, 2) || '';
 
-        console.log(`${data.symbol}\t$${data.price}\t$${data.value}\t$${data.cost}\t${data.percentage}% | color='#000' font=${font} image=${image}`);
+        console.log(`${data.symbol}\t$${data.price}\t$${data.value}\t$${data.cost}\t${data.profit}% | color='#000' font=${font} image=${image}`);
     });
     console.log('---');
     console.log(`total: $${_.round(totalValue, 2)}\t\t% profit/loss: ${_.round(valueWithCost / totalCost * 100 - 100, 2)}% | color='#000' font=${font}`);
