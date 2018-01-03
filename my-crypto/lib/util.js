@@ -1,7 +1,14 @@
 const debuglog = require('util').debuglog('dev');
 
 module.exports = {
-    log: function(message){
-        debuglog(message);
+
+    /**
+     * log
+     * @param message
+     * @param data
+     */
+    log: function(message, data){
+        debuglog(message, data);
     }
+
 };

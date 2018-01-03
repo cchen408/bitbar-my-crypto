@@ -3,6 +3,7 @@ var _ = require('lodash');
 var cmc = require('./cmc');
 var gdax = require('./gdax');
 var binance = require('./binance');
+var util = require('./util');
 
 module.exports = {
 
@@ -27,8 +28,8 @@ module.exports = {
         var self = this;
 
         var promises = [];
-        _.each(currencies, function(currency){
-            var promise = async function(){
+        _.each(currencies, function (currency) {
+            var promise = async function () {
                 var data = await cmc.getCoin(currency);
                 self.data[data.id] = data;
             }
@@ -41,11 +42,35 @@ module.exports = {
      * get data from binance
      */
     getBinanceData: async function (currencies) {
-        // get ICX price
-        if(_.includes(currencies, 'icon')){
-            var iconPrice = await binance.getPriceUsd('icx');
-            _.set(this.data, `icon.price_usd`, iconPrice);
-        }
+        var self = this;
+
+        var promises = [];
+        _.each(currencies, function (currency) {
+
+            var promise = async function(){
+
+                var symbol = _.get(self, `data.${currency}.symbol`);
+                // util.log(currency);
+                // util.log(symbol);
+
+                if(symbol){
+                    var price = await binance.getPriceUsd(symbol);
+                    util.log(`price for ${symbol}`, price);
+                }
+
+
+                if (price) {
+                    util.log(`replace price of ${currency} with ${price}`)
+                    _.set(self.data, `${currency}.price_usd`, price);
+                }
+            };
+
+            promises.push(promise());
+        });
+
+        await Promise.all(promises);
+
+
     },
 
     /**

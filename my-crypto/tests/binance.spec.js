@@ -19,6 +19,11 @@ describe('binance', function () {
     it('should return price of icon', async function () {
         var response = await binance.getPriceUsd('icx');
         expect(response).to.exist;
-    })
+    });
+
+    it('should organize prices', async function () {
+        await binance.getPrices();
+        expect(binance.sorted).to.exist;
+    });
 
 });
