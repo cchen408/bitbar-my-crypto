@@ -64,15 +64,15 @@ async function myCrypto() {
 
     console.log(`| image=${icons.usd}`);
     console.log('---');
-    console.log(`${'sym'.padEnd(8)}\t${'price'.padEnd(8)}\t${'value'.padEnd(8)}\t${'cost'.padEnd(4)}\t% | color='#000' font=${font}`);
+    console.log(`${'sym'.padEnd(8)}\t${'price'.padEnd(8)}\t${'value'.padEnd(8)}\t${'cost'.padEnd(8)}\t% | color='#000' font=${font}`);
     console.log('---');
     _.each(holdings, function (data) {
         var image = _.get(icons, _.toLower(data.symbol), icons.usd);
         data.cost = data.cost || 0;
-        data.cost = _.round(data.cost, 2).toString().padEnd(4)
+        data.cost = _.round(data.cost, 2).toString().padEnd(8)
         data.symbol = data.symbol || '';
         data.symbol = data.symbol.padEnd(5);
-        data.price = _.round(data.price, 5) || '';
+        data.price = _.round(data.price, 2) || '';
         data.price = data.price.toString().padEnd(8);
         data.value = _.round(data.value, 2) || '';
         data.value = data.value.toString().padEnd(8);
