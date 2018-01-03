@@ -61,7 +61,7 @@ module.exports = {
 
                 if (price) {
                     util.log(`replace price of ${currency} with ${price}`)
-                    _.set(self.data, `${currency}.price_usd`, price);
+                    _.set(self.data, `${currency}.price_usd`, _.round(price, 2));
                 }
             };
 
